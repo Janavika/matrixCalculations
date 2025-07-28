@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Matrix Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Advanced Matrix Calculator</h1>
+
+    <div class="control-panel">
+        <div>
+            <label>Operation: </label>
+            <select id="operation" onchange="updateMatrixInputs()">
+                <option value="add">Addition (A + B)</option>
+                <option value="subtract">Subtraction (A - B)</option>
+                <option value="multiply">Multiplication (A × B)</option>
+                <option value="determinant">Determinant</option>
+                <option value="inverse">Inverse</option>
+                <option value="adjoint">Adjoint</option>
+                <option value="rank">Rank</option>
+            </select>
+        </div>
+        
+        <div id="dimension-controls">
+            <div>
+                <label>Rows (A): </label>
+                <input type="number" id="rowsA" min="1" max="5" value="2">
+                <label>Columns (A): </label>
+                <input type="number" id="colsA" min="1" max="5" value="2">
+            </div>
+            <div id="matrix-b-dims" style="display: none;">
+                <label>Rows (B): </label>
+                <input type="number" id="rowsB" min="1" max="5" value="2">
+                <label>Columns (B): </label>
+                <input type="number" id="colsB" min="1" max="5" value="2">
+            </div>
+        </div>
+        
+        <button onclick="createMatrices()">Create Matrices</button>
+        <button onclick="calculate()" id="calculate-btn" disabled>Calculate</button>
+    </div>
+    
+    <div id="matrix-inputs" style="display: none;">
+        <div class="matrix-container">
+            <div class="matrix">
+                <h3>Matrix A</h3>
+                <table id="matrixA"></table>
+            </div>
+            
+            <div class="operation-symbol" id="op-symbol">+</div>
+            
+            <div class="matrix" id="matrix-b-container" style="display: none;">
+                <h3>Matrix B</h3>
+                <table id="matrixB"></table>
+            </div>
+        </div>
+    </div>
+    
+    <div id="error" class="error"></div>
+    
+    <div id="result" class="result-panel" style="display: none;">
+        <h2>Result</h2>
+        <div id="result-content"></div>
+    </div>
+
+    <script src="matrix-operations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
