@@ -1,201 +1,146 @@
-// Main application logic
-let currentOperation = 'add';
+let matrixA = [], matrixB = [], currentOperation = '';
 
-function updateMatrixInputs() {
-    const operation = document.getElementById('operation').value;
-    const matrixBDims = document.getElementById('matrix-b-dims');
-    const matrixBContainer = document.getElementById('matrix-b-container');
-    const opSymbol = document.getElementById('op-symbol');
-    
-    currentOperation = operation;
-    
-    switch(operation) {
-        case 'add':
-            opSymbol.textContent = '+';
-            matrixBDims.style.display = 'block';
-            matrixBContainer.style.display = 'block';
-            break;
-        case 'subtract':
-            opSymbol.textContent = '-';
-            matrixBDims.style.display = 'block';
-            matrixBContainer.style.display = 'block';
-            break;
-        case 'multiply':
-            opSymbol.textContent = '×';
-            matrixBDims.style.display = 'block';
-            matrixBContainer.style.display = 'block';
-            break;
-        default:
-            opSymbol.textContent = '';
-            matrixBDims.style.display = 'none';
-            matrixBContainer.style.display = 'none';
-    }
-    
-    document.getElementById('matrix-inputs').style.display = 'none';
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('error').textContent = '';
-    document.getElementById('calculate-btn').disabled = true;
+const rowsInput = document.getElementById("rows");
+const colsInput = document.getElementById("cols");
+const operationSelect = document.getElementById("operation");
+const generateBtn = document.getElementById("generate-btn");
+const calculateBtn = document.getElementById("calculate-btn");
+const matrixAContainer = document.getElementById("matrixA");
+const matrixBContainer = document.getElementById("matrixB");
+const resultContent = document.getElementById("result-content");
+const errorBox = document.getElementById("error");
+
+operationSelect.addEventListener("change", handleOperationChange);
+generateBtn.addEventListener("click", generateMatrices);
+calculateBtn.addEventListener("click", calculate);
+document.getElementById("dark-mode-toggle").addEventListener("change", toggleDarkMode);
+
+function handleOperationChange() {
+  const op = operationSelect.value;
+  document.getElementById("matrixB-wrapper").style.display = op === "add" || op === "subtract" || op === "multiply" ? "block" : "none";
 }
 
-function createMatrices() {
-    const rowsA = parseInt(document.getElementById('rowsA').value);
-    const colsA = parseInt(document.getElementById('colsA').value);
-    const operation = document.getElementById('operation').value;
-    
-    let rowsB = rowsA, colsB = colsA;
-    if (operation === 'add' || operation === 'subtract' || operation === 'multiply') {
-        rowsB = parseInt(document.getElementById('rowsB').value);
-        colsB = parseInt(document.getElementById('colsB').value);
+function generateMatrices() {
+  errorBox.textContent = "";
+  resultContent.innerHTML = "";
+  const rows = parseInt(rowsInput.value);
+  const cols = parseInt(colsInput.value);
+  const op = operationSelect.value;
+
+  if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
+    errorBox.textContent = "Invalid matrix size";
+    return;
+  }
+
+  matrixAContainer.innerHTML = "";
+  matrixBContainer.innerHTML = "";
+  createMatrixInputs(matrixAContainer, rows, cols, 'A');
+
+  const matrixBWrapper = document.getElementById("matrixB-wrapper");
+  if (op === 'add' || op === 'subtract' || op === 'multiply') {
+    matrixBWrapper.style.display = "block";
+    createMatrixInputs(matrixBContainer, rows, cols, 'B');
+  } else {
+    matrixBWrapper.style.display = "none";
+  }
+
+  document.getElementById("matrix-section").style.display = "block";
+  calculateBtn.disabled = false;
+}
+
+function createMatrixInputs(container, rows, cols, prefix) {
+  for (let i = 0; i < rows; i++) {
+    const tr = document.createElement("tr");
+    for (let j = 0; j < cols; j++) {
+      const td = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "number";
+      input.id = `${prefix}_${i}_${j}`;
+      input.value = Math.floor(Math.random() * 10);
+      td.appendChild(input);
+      tr.appendChild(td);
     }
-    
-    document.getElementById('matrixA').innerHTML = '';
-    document.getElementById('matrixB').innerHTML = '';
-    document.getElementById('error').textContent = '';
-    document.getElementById('result').style.display = 'none';
-    
-    // Create Matrix A
-    for (let i = 0; i < rowsA; i++) {
-        const tr = document.createElement('tr');
-        for (let j = 0; j < colsA; j++) {
-            const td = document.createElement('td');
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.value = Math.floor(Math.random() * 10);
-            input.id = `A_${i}_${j}`;
-            td.appendChild(input);
-            tr.appendChild(td);
-        }
-        document.getElementById('matrixA').appendChild(tr);
-    }
-    
-    if (operation === 'add' || operation === 'subtract' || operation === 'multiply') {
-        for (let i = 0; i < rowsB; i++) {
-            const tr = document.createElement('tr');
-            for (let j = 0; j < colsB; j++) {
-                const td = document.createElement('td');
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.value = Math.floor(Math.random() * 10);
-                input.id = `B_${i}_${j}`;
-                td.appendChild(input);
-                tr.appendChild(td);
-            }
-            document.getElementById('matrixB').appendChild(tr);
-        }
-    }
-    
-    document.getElementById('matrix-inputs').style.display = 'block';
-    document.getElementById('calculate-btn').disabled = false;
+    container.appendChild(tr);
+  }
 }
 
 function calculate() {
-    const operation = document.getElementById('operation').value;
-    const rowsA = parseInt(document.getElementById('rowsA').value);
-    const colsA = parseInt(document.getElementById('colsA').value);
-    
-    let rowsB = rowsA, colsB = colsA;
-    if (operation === 'add' || operation === 'subtract' || operation === 'multiply') {
-        rowsB = parseInt(document.getElementById('rowsB').value);
-        colsB = parseInt(document.getElementById('colsB').value);
+  const rows = parseInt(rowsInput.value);
+  const cols = parseInt(colsInput.value);
+  const op = operationSelect.value;
+  matrixA = readMatrix('A', rows, cols);
+  let result;
+  try {
+    if (op === 'add' || op === 'subtract' || op === 'multiply') {
+      matrixB = readMatrix('B', rows, cols);
     }
-    
-    document.getElementById('error').textContent = '';
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('result-content').innerHTML = '';
-    
-    try {
-        const matrixA = [];
-        for (let i = 0; i < rowsA; i++) {
-            const row = [];
-            for (let j = 0; j < colsA; j++) {
-                const value = parseFloat(document.getElementById(`A_${i}_${j}`).value);
-                row.push(isNaN(value) ? 0 : value);
-            }
-            matrixA.push(row);
-        }
-        
-        let matrixB = [];
-        if (operation === 'add' || operation === 'subtract' || operation === 'multiply') {
-            for (let i = 0; i < rowsB; i++) {
-                const row = [];
-                for (let j = 0; j < colsB; j++) {
-                    const value = parseFloat(document.getElementById(`B_${i}_${j}`).value);
-                    row.push(isNaN(value) ? 0 : value);
-                }
-                matrixB.push(row);
-            }
-        }
-        
-        let result;
-        switch(operation) {
-            case 'add':
-                result = addMatrices(matrixA, matrixB);
-                break;
-            case 'subtract':
-                result = subtractMatrices(matrixA, matrixB);
-                break;
-            case 'multiply':
-                result = multiplyMatrices(matrixA, matrixB);
-                break;
-            case 'determinant':
-                result = calculateDeterminant(matrixA);
-                break;
-            case 'inverse':
-                result = calculateInverse(matrixA);
-                break;
-            case 'adjoint':
-                result = calculateAdjoint(matrixA);
-                break;
-            case 'rank':
-                result = calculateRank(matrixA);
-                break;
-            default:
-                throw new Error("Unknown operation");
-        }
-        
-        displayResult(result, operation);
-    } catch (error) {
-        document.getElementById('error').textContent = error.message;
+    switch (op) {
+      case 'add': result = addMatrices(matrixA, matrixB); break;
+      case 'subtract': result = subtractMatrices(matrixA, matrixB); break;
+      case 'multiply': result = multiplyMatrices(matrixA, matrixB); break;
+      case 'transpose': result = transposeMatrix(matrixA); break;
+      case 'determinant': result = [[calculateDeterminant(matrixA)]]; break;
+      case 'inverse': result = calculateInverse(matrixA); break;
+      case 'adjoint': result = calculateAdjoint(matrixA); break;
+      case 'rank': result = calculateRank(matrixA); break;
+      case 'lu':
+        result = luDecomposition(matrixA);
+        break;
+      case 'eigen':
+        result = [calculateEigenvalues(matrixA)];
+        break;
+      default:
+        throw new Error("Unsupported operation");
     }
+    displayResult(result);
+  } catch (err) {
+    errorBox.textContent = err.message;
+  }
 }
 
-function displayResult(result, operation) {
-    const resultContent = document.getElementById('result-content');
-    
-    if (operation === 'determinant' || operation === 'rank') {
-        resultContent.innerHTML = `<h3>${operation === 'determinant' ? 'Determinant' : 'Rank'}: ${result}</h3>`;
-    } else if (typeof result === 'string') {
-        resultContent.innerHTML = `<p>${result}</p>`;
+function readMatrix(prefix, rows, cols) {
+  const matrix = [];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      const val = parseFloat(document.getElementById(`${prefix}_${i}_${j}`).value);
+      if (isNaN(val)) throw new Error("Matrix contains invalid numbers");
+      row.push(val);
+    }
+    matrix.push(row);
+  }
+  return matrix;
+}
+
+function displayResult(result) {
+  resultContent.innerHTML = '';
+  const table = document.createElement("table");
+
+  result.forEach((row, rowIndex) => {
+    const tr = document.createElement("tr");
+    if (Array.isArray(row) && row.includes('—')) {
+      const td = document.createElement("td");
+      td.textContent = "—————";
+      td.colSpan = row.length;
+      td.style.textAlign = "center";
+      tr.appendChild(td);
     } else {
-        const table = document.createElement('table');
-        
-        if (Array.isArray(result[0])) {
-            for (let i = 0; i < result.length; i++) {
-                const tr = document.createElement('tr');
-                for (let j = 0; j < result[0].length; j++) {
-                    const td = document.createElement('td');
-                    const value = result[i][j];
-                    td.textContent = Number.isInteger(value) ? value : value.toFixed(2);
-                    tr.appendChild(td);
-                }
-                table.appendChild(tr);
-            }
-        } else {
-            const tr = document.createElement('tr');
-            for (let j = 0; j < result.length; j++) {
-                const td = document.createElement('td');
-                const value = result[j];
-                td.textContent = Number.isInteger(value) ? value : value.toFixed(2);
-                tr.appendChild(td);
-            }
-            table.appendChild(tr);
-        }
-        
-        resultContent.appendChild(table);
+      const valuesToDisplay = Array.isArray(row) ? row : [row];
+      valuesToDisplay.forEach(val => {
+        const td = document.createElement("td");
+        td.textContent = typeof val === 'number' ?
+          (Number.isInteger(val) ? val : val.toFixed(2)) :
+          val;
+        tr.appendChild(td);
+      });
     }
-    
-    document.getElementById('result').style.display = 'block';
+    table.appendChild(tr);
+  });
+
+  resultContent.appendChild(table);
+  document.getElementById("result").style.display = "block";
 }
 
-// Initialize the calculator
-updateMatrixInputs();
+function toggleDarkMode(e) {
+  document.body.classList.toggle("dark-mode", e.target.checked);
+}
