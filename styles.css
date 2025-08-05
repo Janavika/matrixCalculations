@@ -16,11 +16,11 @@
 body.dark-mode {
     --primary-color: #98FB98;
     --secondary-color: #3CB371; /* Medium Sea Green */
-    --background-light: #004d00;
-    --card-bg-light: #006400;
+    --background-light: #000000;
+    --card-bg-light: #000000;
     --text-color-light: #F0FFF0;
     --border-color-light: #3CB371;
-    --hover-bg-light: #008000;
+    --hover-bg-light: #000000;
     --success-bg-light: #3CB371;
     --success-text-light: #F0FFF0;
 }
