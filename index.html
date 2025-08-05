@@ -1,70 +1,141 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matrix Calculator</title>
+  <title>Matrix Master's Blog</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 </head>
 <body>
   <header>
-    <h1>Advanced Matrix Calculator</h1>
+    <h1>Matrix Master's Blog</h1>
     <label class="dark-toggle">
       <input type="checkbox" id="dark-mode-toggle" />
       Dark Mode
     </label>
   </header>
 
-  <div class="control-panel">
-    <div class="dimension-group">
-      <label for="rows"><b>Rows</b></label>
-      <input type="number" id="rows" min="1" max="10" value="3" />
-      <label for="cols"><b>Columns:</b></label>
-      <input type="number" id="cols" min="1" max="10" value="3" />
-    </div>
+  <nav>
+    <a href="#home" class="nav-link active">Home</a>
+    <a href="#operations" class="nav-link">Calculator</a>
+    <a href="#about" class="nav-link">About Me</a>
+  </nav>
 
-    <label for="operation"><b>Operation:</b></label>
-    <select id="operation">
-      <option value="add">Addition (A + B)</option>
-      <option value="subtract">Subtraction (A - B)</option>
-      <option value="multiply">Multiplication (A × B)</option>
-      <option value="transpose">Transpose</option>
-      <option value="determinant">Determinant</option>
-      <option value="inverse">Inverse</option>
-      <option value="adjoint">Adjoint</option>
-      <option value="rank">Rank</option>
-      <option value="lu">LU Decomposition</option>
-      <option value="eigen">Eigenvalues</option>
-    </select>
+  <main>
+    <section id="home" class="page active">
+        <div class="page-content">
+            <h2>An Interactive Guide to Matrix Operations</h2>
+            <p>Welcome! This website is an interactive tool designed to help you perform and, more importantly, understand fundamental matrix operations. Matrices are not just abstract mathematical objects; they are the bedrock of modern computing, especially in the fields of Data Science and Machine Learning.</p>
+            
+            <h4>What This Tool Offers</h4>
+            <p>In the <strong>Calculator</strong> section, you can perform a variety of essential matrix calculations, including:</p>
+            <ul>
+                <li>Basic Arithmetic: <strong>Addition, Subtraction, Multiplication</strong></li>
+                <li>Core Linear Algebra: <strong>Transpose, Determinant, Inverse, Adjoint, Rank</strong></li>
+                <li>Advanced Decompositions: <strong>LU Decomposition</strong></li>
+            </ul>
+            <p>For each operation you select, a clear explanation of the underlying mathematical process will appear, helping you connect the theory to the practice.</p>
 
-    <div class="button-group">
-      <button id="generate-btn">Generate Matrix</button>
-      <button id="calculate-btn" disabled>Calculate</button>
-    </div>
-  </div>
+            <h4>Why is this Important for Data Science & ML?</h4>
+            <p>A deep understanding of Linear Algebra is non-negotiable for anyone serious about Data Science or Machine Learning. Here’s why this tool is relevant:</p>
+            <ul>
+                <li><strong>Data Representation:</strong> Datasets are often represented as matrices, where rows are observations and columns are features.</li>
+                <li><strong>Core Algorithms:</strong> Many ML algorithms are built on matrix operations. For example, Linear Regression can be solved using the matrix inverse, and Principal Component Analysis (PCA).</li>
+                <li><strong>Neural Networks:</strong> At their core, neural networks perform a series of matrix multiplications on input data and weight matrices. Understanding these operations is key to understanding how a neural network learns.</li>
+            </ul>
+            <p>By using this calculator, you can build a strong, intuitive foundation in these critical concepts. Experiment with different matrices and operations to see how they work firsthand!</p>
+        </div>
+    </section>
 
-  <div id="matrix-section" class="matrix-section" style="display:none">
-    <h3>Matrix A</h3>
-    <table id="matrixA"></table>
+    <section id="about" class="page">
+        <div class="page-content">
+            <h2>About the Creator</h2>
+            <p>Hello, my name is <strong>Janavika Shanmuga</strong>, and I am an aspiring data scientist with a Bachelor’s degree in <strong>Computer Science and Engineering</strong>. Currently working as a backend developer, I am focused on building a strong foundation in data science—especially in mathematics, machine learning, and AI-driven applications.</p>
 
-    <div id="matrixB-wrapper" style="display:none">
-      <h3>Matrix B</h3>
-      <table id="matrixB"></table>
-    </div>
+            <p>This platform, the <strong>Matrix Master’s Blog</strong>, is a personal project that combines my passion for mathematics with hands-on software development. I created this tool to explore and simplify the complex ideas of linear algebra while making them accessible to students, educators, and fellow learners.</p>
 
-  </div>
+            <h4>What This Tool Offers</h4>
+            <ul>
+                <li>Dynamic matrix dimension selection and value inputs.</li>
+                <li>Support for essential operations:
+                <ul>
+                    <li><strong>Basic Arithmetic:</strong> Addition, Subtraction, Multiplication</li>
+                    <li><strong>Core Operations:</strong> Transpose, Determinant, Inverse, Adjoint, Rank</li>
+                    <li><strong>Advanced Decompositions:</strong> LU Decomposition</li>
+                </ul>
+                </li>
+                <li>Mobile-responsive, user-friendly interface with real-time feedback.</li>
+            </ul>
 
-  <div id="result" class="result-panel" style="display:none">
-    <h2>Result</h2>
-    <div id="result-content"></div>
-  </div>
+            <h4>Looking Ahead</h4>
+            <p>This project is just the beginning. Planned features include step-by-step operation explanations, result export options, and support for advanced concepts like SVD and PCA.</p>
 
-  <div id="error" class="error"></div>
+            <p>I believe in making learning tools that are both practical and educational. Thank you for visiting the blog—I hope this tool enhances your understanding as much as it continues to grow my own.</p>
+
+            <p>🔗 Connect with me on <a href="https://www.linkedin.com/in/janavika-shannu-7354b8211/" target="_blank">LinkedIn</a>.</p>
+        </div>
+    </section>
+
+    <section id="operations" class="page">
+        <div class="control-panel">
+            <div class="dimension-group">
+                <label for="rows"><b>Rows</b></label>
+                <input type="number" id="rows" min="1" max="10" value="3" />
+                <label for="cols"><b>Columns:</b></label>
+                <input type="number" id="cols" min="1" max="10" value="3" />
+            </div>
+
+            <label for="operation"><b>Operation:</b></label>
+            <select id="operation">
+                <option value="add">Addition (A + B)</option>
+                <option value="subtract">Subtraction (A - B)</option>
+                <option value="multiply">Multiplication (A × B)</option>
+                <option value="transpose">Transpose</option>
+                <option value="determinant">Determinant</option>
+                <option value="inverse">Inverse</option>
+                <option value="adjoint">Adjoint</option>
+                <option value="rank">Rank</option>
+                <option value="lu">LU Decomposition</option>
+            </select>
+
+            <div class="button-group">
+                <button id="generate-btn">Generate Matrices</button>
+                <button id="calculate-btn" disabled>Calculate</button>
+            </div>
+        </div>
+        
+        <div id="initial-explanation-wrapper">
+            <div id="operation-explanation" class="operation-explanation" style="display:none;"></div>
+        </div>
+
+        <div id="matrix-section" class="matrix-section" style="display:none">
+            <h3>Matrix A</h3>
+            <table id="matrixA"></table>
+
+            <div id="matrixB-wrapper" style="display:none">
+                <h3>Matrix B</h3>
+                <table id="matrixB"></table>
+            </div>
+        </div>
+        
+        <div id="matrix-explanation-wrapper"></div>
+
+        <div id="result" class="result-panel" style="display:none">
+            <h2>Result</h2>
+            <div id="result-content"></div>
+        </div>
+        
+        <div id="result-explanation-wrapper"></div>
+
+        <div id="error" class="error"></div>
+    </section>
+  </main>
 
   <script src="matrix-operations.js"></script>
   <script src="app.js"></script>
-
-  
 </body>
 </html>
